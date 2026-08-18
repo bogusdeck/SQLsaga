@@ -8,7 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	lgtable "github.com/charmbracelet/lipgloss/table"
-	"github.com/bogusdeck/sqlquest/internal/parser"
+	"github.com/bogusdeck/sqlsaga/internal/parser"
 )
 
 // ResultsPanel renders the outcome of the most recent query.

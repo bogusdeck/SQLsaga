@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bogusdeck/sqlquest/internal/database"
-	"github.com/bogusdeck/sqlquest/internal/parser"
+	"github.com/bogusdeck/sqlsaga/internal/database"
+	"github.com/bogusdeck/sqlsaga/internal/parser"
 )
 
 // Engine is the live state of a single playthrough.

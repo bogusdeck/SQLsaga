@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bogusdeck/sqlquest/internal/parser"
-	"github.com/bogusdeck/sqlquest/internal/stories"
+	"github.com/bogusdeck/sqlsaga/internal/parser"
+	"github.com/bogusdeck/sqlsaga/internal/stories"
 )
 
 // Validation is re-exported from the parser package to keep story files simple.

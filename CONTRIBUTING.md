@@ -13,7 +13,7 @@ Thank you for your interest in contributing! This document explains how to contr
 
 ```bash
 # Clone the repository
-git clone https://github.com/bogusdeck/sqlquest.git
+git clone https://github.com/bogusdeck/sqlsaga.git
 cd sqlquest
 
 # Download dependencies

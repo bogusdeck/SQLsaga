@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bogusdeck/sqlquest/internal/database"
+	"github.com/bogusdeck/sqlsaga/internal/database"
 )
 
 func newTestStore(t *testing.T) *database.Store {

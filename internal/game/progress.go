@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/bogusdeck/sqlquest/internal/database"
+	"github.com/bogusdeck/sqlsaga/internal/database"
 )
 
 // ProgressSummary summarises a user's run for the stats view.

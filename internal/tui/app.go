@@ -11,10 +11,10 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/bogusdeck/sqlquest/internal/game"
-	"github.com/bogusdeck/sqlquest/internal/parser"
-	"github.com/bogusdeck/sqlquest/internal/tui/components"
-	"github.com/bogusdeck/sqlquest/internal/utils"
+	"github.com/bogusdeck/sqlsaga/internal/game"
+	"github.com/bogusdeck/sqlsaga/internal/parser"
+	"github.com/bogusdeck/sqlsaga/internal/tui/components"
+	"github.com/bogusdeck/sqlsaga/internal/utils"
 )
 
 // App is the root Bubble Tea model.

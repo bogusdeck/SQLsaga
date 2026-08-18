@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/bogusdeck/sqlquest/internal/game"
+	"github.com/bogusdeck/sqlsaga/internal/game"
 )
 
 // StoryPanel renders the narrative + objective + revealed hints.
