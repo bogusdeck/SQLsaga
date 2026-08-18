@@ -75,7 +75,7 @@ brews:
     commit_author:
       name: goreleaserbot
       email: goreleaser@users.noreply.github.com
-    directory: .github/homebrew/Formula
+    directory: Formula
     homepage: https://github.com/bogusdeck/sqlsaga
     description: An interactive terminal game that teaches SQL through a narrative mystery story
     license: MIT
