@@ -75,19 +75,19 @@ go install github.com/bogusdeck/sqlsaga/cmd/sqlquest@latest
 
 ```bash
 # Start the game
-./sqlquest
+sqlsaga
 
 # Start a specific story
-./sqlquest -story mystery
+sqlsaga -story mystery
 
 # Jump to a specific chapter
-./sqlquest -chapter chapter_1
+sqlsaga -chapter chapter_1
 
 # View your stats
-./sqlquest -stats
+sqlsaga -stats
 
 # Reset progress
-./sqlquest -reset
+sqlsaga -reset
 ```
 
 ## Keyboard Shortcuts
@@ -130,14 +130,17 @@ go install github.com/bogusdeck/sqlsaga/cmd/sqlquest@latest
 ```
 -story string       story id or genre (default "mystery")
 -chapter string     chapter id to jump to
--challenge string   challenge id to jump to
+-challenge string   challenge id to jump to (optional, within current chapter)
 -reset              wipe local progress before starting
 -stats              print current stats and exit
 -leaderboard        print cloud leaderboard (stubbed offline)
 -export string      export progress to JSON file
 -import string      import progress from JSON file
 -run                force TUI to start even if other flags set
+-submit string      submit a story JSON file for local use
+-install string     install a story JSON file locally permanently
 -validate string    validate a SQL file against current challenge
+-version            print version and exit
 ```
 
 ## Development
@@ -173,7 +176,7 @@ Required fields:
 
 ## Configuration
 
-Config stored at `~/.sqlquest/config.yaml`:
+Config stored at `~/.sqlsaga/config.yaml`:
 
 ```yaml
 theme: "dark"
@@ -188,7 +191,7 @@ story_preferences:
   - "mystery"
 ```
 
-Progress database at `~/.sqlquest/sqlquest.db`.
+Progress database at `~/.sqlsaga/sqlsaga.db`.
 
 ## License
 
