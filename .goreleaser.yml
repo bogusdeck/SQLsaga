@@ -67,8 +67,6 @@ nfpms:
     section: utils
     priority: optional
     epoch: 0
-    scripts:
-      postinstall: echo "SQL Saga installed! Run 'sqlsaga' to start."
 brews:
   - name: sqlsaga
     repository:
