@@ -62,19 +62,15 @@ nfpms:
       - deb
       - rpm
       - apk
-    binds:
-      - /usr/bin/sqlsaga=/usr/bin/sqlsaga
     recommends:
       - git
     section: utils
     priority: optional
     epoch: 0
-    metadata:
-      deb:
-        depends:
-          - libc6
-        suggests:
-          - sqlite3
+    depends:
+      - libc6
+    suggests:
+      - sqlite3
     scripts:
       postinstall: |
         echo "SQL Saga installed! Run 'sqlsaga' to start."
@@ -87,12 +83,13 @@ nfpms:
         compression_level: 6
 brews:
   - name: sqlsaga
-    taps:
-      - bogusdeck/homebrew-sqlsaga
+    repository:
+      owner: bogusdeck
+      name: homebrew-sqlsaga
     commit_author:
       name: goreleaserbot
       email: goreleaser@users.noreply.github.com
-    folder: Formula
+    directory: Formula
     homepage: https://github.com/bogusdeck/sqlsaga
     description: An interactive terminal game that teaches SQL through a narrative mystery story
     license: MIT
