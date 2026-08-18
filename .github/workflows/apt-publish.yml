@@ -1,0 +1,70 @@
+name: Publish APT Repository
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  apt-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: apt-repo
+
+      - name: Download .deb assets from release
+        run: |
+          mkdir -p debs
+          gh release download ${{ github.event.release.tag_name }} --repo ${{ github.repository }} --pattern "sqlsaga*linux*.deb" --dir debs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create APT repo structure
+        run: |
+          mkdir -p apt-repo/pool/main/s/sqlsaga
+          mkdir -p apt-repo/dists/stable/main/binary-amd64
+          mkdir -p apt-repo/dists/stable/main/binary-arm64
+
+      - name: Copy .deb files
+        run: |
+          cp debs/sqlsaga*amd64.deb apt-repo/pool/main/s/sqlsaga/ 2>/dev/null || true
+          cp debs/sqlsaga*arm64.deb apt-repo/pool/main/s/sqlsaga/ 2>/dev/null || true
+
+      - name: Generate Packages files
+        run: |
+          cd apt-repo
+          for arch in amd64 arm64; do
+            if [ -f pool/main/s/sqlsaga/sqlsaga*${arch}.deb ]; then
+              dpkg-scanpackages pool/main/s/sqlsaga/ /dev/null | gzip -9c > dists/stable/main/binary-${arch}/Packages.gz
+              apt-ftparchive release dists/stable/main/binary-${arch} > dists/stable/main/binary-${arch}/Release
+            fi
+          done
+
+      - name: Generate main Release file
+        run: |
+          cd apt-repo
+          cat > dists/stable/Release <<EOF
+Origin: SQL Saga
+Label: SQL Saga APT Repository
+Suite: stable
+Codename: stable
+Architectures: amd64 arm64
+Components: main
+Description: APT repository for SQL Saga - SQL learning game
+EOF
+
+      - name: Commit and push
+        run: |
+          cd apt-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update APT repo with ${{ github.event.release.tag_name }}" || echo "No changes"
+          git push origin gh-pages
