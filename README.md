@@ -13,13 +13,61 @@ An interactive terminal game that teaches SQL through a narrative mystery story.
 
 ## Installation
 
+### Homebrew (macOS / Linux)
 ```bash
-# From source
+brew install bogusdeck/sqlsaga/sqlsaga
+```
+
+### APT (Debian / Ubuntu) - via GitHub Pages
+```bash
+# Add the repository
+echo "deb [trusted=yes] https://bogusdeck.github.io/sqlsaga stable main" | sudo tee /etc/apt/sources.list.d/sqlsaga.list
+
+# Update and install
+sudo apt update && sudo apt install sqlsaga
+```
+
+### Manual .deb (Debian / Ubuntu)
+```bash
+wget https://github.com/bogusdeck/sqlsaga/releases/latest/download/sqlsaga_linux_amd64.deb
+sudo dpkg -i sqlsaga_linux_amd64.deb
+# Or with apt (handles dependencies)
+sudo apt install ./sqlsaga_linux_amd64.deb
+```
+
+### dnf / yum (Fedora / RHEL / CentOS)
+```bash
+wget https://github.com/bogusdeck/sqlsaga/releases/latest/download/sqlsaga_linux_amd64.rpm
+sudo dnf install sqlsaga_linux_amd64.rpm
+```
+
+### apk (Alpine Linux)
+```bash
+wget https://github.com/bogusdeck/sqlsaga/releases/latest/download/sqlsaga_linux_amd64.apk
+apk add --allow-untrusted sqlsaga_linux_amd64.apk
+```
+
+### Manual (all platforms)
+Download from [releases](https://github.com/bogusdeck/sqlsaga/releases):
+- **macOS**: `sqlsaga_darwin_amd64.tar.gz` (Intel) or `sqlsaga_darwin_arm64.tar.gz` (Apple Silicon)
+- **Linux**: `sqlsaga_linux_amd64.tar.gz` (x86_64) or `sqlsaga_linux_arm64.tar.gz` (ARM64)
+- **Windows**: `sqlsaga_windows_amd64.zip` or `sqlsaga_windows_arm64.zip`
+
+```bash
+# Example Linux/macOS
+tar -xzf sqlsaga_*.tar.gz
+sudo mv sqlsaga /usr/local/bin/
+```
+
+### From source
+```bash
 git clone https://github.com/bogusdeck/sqlsaga.git
 cd sqlsaga
 go build -o sqlsaga ./cmd/sqlquest
+```
 
-# Or install directly (when released)
+### Go install
+```bash
 go install github.com/bogusdeck/sqlsaga/cmd/sqlquest@latest
 ```
 
