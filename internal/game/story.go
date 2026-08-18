@@ -6,12 +6,15 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/bogusdeck/sqlsaga/internal/parser"
 	"github.com/bogusdeck/sqlsaga/internal/stories"
+	"github.com/bogusdeck/sqlsaga/internal/utils"
 )
 
 // Validation is re-exported from the parser package to keep story files simple.
@@ -60,18 +63,19 @@ type LoadedStory struct {
 var ErrNoStories = errors.New("no stories found in embedded bundle")
 
 // LoadAllStories walks the embedded story filesystem and parses every story
-// JSON file. The returned slice is sorted by story id for stable display.
+// JSON file. It also loads locally submitted stories. The returned slice is sorted by story id.
 func LoadAllStories() ([]LoadedStory, error) {
-	root := stories.FS
 	var out []LoadedStory
-	err := fs.WalkDir(root, ".", func(path string, d fs.DirEntry, walkErr error) error {
+
+	// 1. Load embedded stories
+	err := fs.WalkDir(stories.FS, ".", func(path string, d fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
 		if d.IsDir() || !strings.HasSuffix(path, ".json") {
 			return nil
 		}
-		data, err := fs.ReadFile(root, path)
+		data, err := fs.ReadFile(stories.FS, path)
 		if err != nil {
 			return fmt.Errorf("read %s: %w", path, err)
 		}
@@ -79,7 +83,7 @@ func LoadAllStories() ([]LoadedStory, error) {
 		if err := json.Unmarshal(data, &s); err != nil {
 			return fmt.Errorf("parse %s: %w", path, err)
 		}
-		if err := validateStory(&s); err != nil {
+		if err := ValidateStory(&s); err != nil {
 			return fmt.Errorf("validate %s: %w", path, err)
 		}
 		out = append(out, LoadedStory{Story: s, FilePath: path})
@@ -88,6 +92,32 @@ func LoadAllStories() ([]LoadedStory, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// 2. Load local stories
+	if localDir, err := utils.StoriesDir(); err == nil {
+		localEntries, err := os.ReadDir(localDir)
+		if err == nil {
+			for _, d := range localEntries {
+				if d.IsDir() || !strings.HasSuffix(d.Name(), ".json") {
+					continue
+				}
+				path := filepath.Join(localDir, d.Name())
+				data, err := os.ReadFile(path)
+				if err != nil {
+					continue // Skip on error
+				}
+				var s Story
+				if err := json.Unmarshal(data, &s); err != nil {
+					continue
+				}
+				if err := ValidateStory(&s); err != nil {
+					continue
+				}
+				out = append(out, LoadedStory{Story: s, FilePath: path})
+			}
+		}
+	}
+
 	if len(out) == 0 {
 		return nil, ErrNoStories
 	}
@@ -110,7 +140,7 @@ func LoadStory(id string) (*LoadedStory, error) {
 	return nil, fmt.Errorf("story %q not found", id)
 }
 
-func validateStory(s *Story) error {
+func ValidateStory(s *Story) error {
 	if s.ID == "" {
 		return errors.New("story id is required")
 	}

@@ -148,3 +148,16 @@ func newDeviceID() (string, error) {
 	}
 	return "device-" + hex.EncodeToString(b[:]), nil
 }
+
+// StoriesDir returns the directory for locally installed stories, creating it if needed.
+func StoriesDir() (string, error) {
+	dir, err := Dir()
+	if err != nil {
+		return "", err
+	}
+	sdir := filepath.Join(dir, "stories")
+	if err := os.MkdirAll(sdir, 0o755); err != nil {
+		return "", fmt.Errorf("mkdir %s: %w", sdir, err)
+	}
+	return sdir, nil
+}

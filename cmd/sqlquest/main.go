@@ -40,6 +40,8 @@ var (
 	flagImport     = flag.String("import", "", "import progress from a JSON file and exit")
 	flagDevRun     = flag.Bool("run", false, "force the TUI to start even if other flags are set")
 	flagValidate   = flag.String("validate", "", "validate a SQL file against a challenge and exit (path to .sql)")
+	flagSubmit     = flag.String("submit", "", "submit a story JSON file for local use")
+	flagInstall    = flag.String("install", "", "install a story JSON file locally so it is permanently available")
 	flagVersion    = flag.Bool("version", false, "print version and exit")
 )
 
@@ -102,17 +104,40 @@ func main() {
 		}
 		return
 	}
+
+	if *flagInstall != "" {
+		if err := installStory(*flagInstall); err != nil {
+			fail("install story", err)
+		}
+		fmt.Printf("Successfully installed story from %s\n", *flagInstall)
+		return
+	}
+
+	// Handle story submission
+	var submittedStory *game.LoadedStory
+	if *flagSubmit != "" {
+		submittedStory, err = loadStoryFromFile(*flagSubmit)
+		if err != nil {
+			fail("load submitted story", err)
+		}
+	}
+
 	if *flagValidate != "" {
-		if err := runValidate(*flagValidate, *flagStory, *flagChapter, store, cfg.DeviceID); err != nil {
+		if err := runValidate(*flagValidate, *flagStory, *flagChapter, store, cfg.DeviceID, submittedStory); err != nil {
 			fail("validate", err)
 		}
 		return
 	}
 
 	// TUI mode.
-	story, err := game.LoadStory(*flagStory)
-	if err != nil {
-		fail("load story", err)
+	var story *game.LoadedStory
+	if submittedStory != nil {
+		story = submittedStory
+	} else {
+		story, err = game.LoadStory(*flagStory)
+		if err != nil {
+			fail("load story", err)
+		}
 	}
 	fb := database.NewLocalStub()
 	fb.SetEnabled(cfg.SyncEnabled)
@@ -212,11 +237,17 @@ func challengeIndexByID(s game.Story, id string) (int, error) {
 	return 0, fmt.Errorf("challenge %q not found", id)
 }
 
-func runValidate(sqlPath, storyID, chapterID string, store *database.Store, userID string) error {
+func runValidate(sqlPath, storyID, chapterID string, store *database.Store, userID string, submittedStory *game.LoadedStory) error {
 	_ = context.Background()
-	story, err := game.LoadStory(storyID)
-	if err != nil {
-		return err
+	var story *game.LoadedStory
+	var err error
+	if submittedStory != nil && submittedStory.Story.ID == storyID {
+		story = submittedStory
+	} else {
+		story, err = game.LoadStory(storyID)
+		if err != nil {
+			return err
+		}
 	}
 	engine := game.NewEngine(story.Story, store, database.NewLocalStub(), userID)
 	if chapterID != "" {
@@ -256,4 +287,39 @@ func runValidate(sqlPath, storyID, chapterID string, store *database.Store, user
 	fmt.Println(diff.String())
 	os.Exit(2)
 	return nil
+}
+
+func loadStoryFromFile(path string) (*game.LoadedStory, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var s game.Story
+	if err := json.Unmarshal(data, &s); err != nil {
+		return nil, err
+	}
+	if err := game.ValidateStory(&s); err != nil {
+		return nil, err
+	}
+	return &game.LoadedStory{Story: s, FilePath: path}, nil
+}
+
+func installStory(path string) error {
+	story, err := loadStoryFromFile(path)
+	if err != nil {
+		return fmt.Errorf("invalid story file: %w", err)
+	}
+
+	storiesDir, err := utils.StoriesDir()
+	if err != nil {
+		return err
+	}
+
+	destPath := filepath.Join(storiesDir, story.Story.ID+".json")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(destPath, data, 0o644)
 }
