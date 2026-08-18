@@ -71,11 +71,11 @@ brews:
   - name: sqlsaga
     repository:
       owner: bogusdeck
-      name: homebrew-sqlsaga
+      name: sqlsaga
     commit_author:
       name: goreleaserbot
       email: goreleaser@users.noreply.github.com
-    directory: Formula
+    directory: .github/homebrew/Formula
     homepage: https://github.com/bogusdeck/sqlsaga
     description: An interactive terminal game that teaches SQL through a narrative mystery story
     license: MIT
