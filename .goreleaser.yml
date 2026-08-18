@@ -67,20 +67,9 @@ nfpms:
     section: utils
     priority: optional
     epoch: 0
-    depends:
-      - libc6
-    suggests:
-      - sqlite3
     scripts:
       postinstall: |
         echo "SQL Saga installed! Run 'sqlsaga' to start."
-    overrides:
-      deb:
-        compression: gzip
-        compression_level: 6
-      rpm:
-        compression: gzip
-        compression_level: 6
 brews:
   - name: sqlsaga
     repository:
