@@ -5,21 +5,21 @@
 class Sqlsaga < Formula
   desc "An interactive terminal game that teaches SQL through a narrative mystery story"
   homepage "https://github.com/bogusdeck/sqlsaga"
-  version "0.1.9"
+  version "0.1.10"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_darwin_amd64.tar.gz"
-      sha256 "9765ef06a4246c54458db5872b186088d9ac4b633ae3896c4003a81632ade0cc"
+      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.10/sqlsaga_0.1.10_darwin_amd64.tar.gz"
+      sha256 "96070dcb98ace15648d077cbc82f2e621313c5adf83e84a3aa3951bbf02e1498"
 
       define_method(:install) do
         bin.install "sqlsaga"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_darwin_arm64.tar.gz"
-      sha256 "81e4793cf3d87cf09289632708b7f342727e1ee34659bdca694cbd5b66ea5355"
+      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.10/sqlsaga_0.1.10_darwin_arm64.tar.gz"
+      sha256 "514bdb1f9fe7b7b943a78da529eb00af9f7fe93a0439b324f7ccd5be0f691c7b"
 
       define_method(:install) do
         bin.install "sqlsaga"
@@ -29,15 +29,15 @@ class Sqlsaga < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_linux_amd64.tar.gz"
-      sha256 "ea07e0cd089f242c86a63bd885169b14df39470fc46b23c523deffa57f63721e"
+      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.10/sqlsaga_0.1.10_linux_amd64.tar.gz"
+      sha256 "b56f83ad9986974fbbd28a42d89b2468c3743eb67e51732f42f6a4c2abb31473"
       define_method(:install) do
         bin.install "sqlsaga"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_linux_arm64.tar.gz"
-      sha256 "441246200fb17ebdbb687d6107ea87d05c70d78a33555502e3676dfb2cd27b7a"
+      url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.10/sqlsaga_0.1.10_linux_arm64.tar.gz"
+      sha256 "bfa936ce86709219c0de526c7bb6c5595e1662e74b09e9653283184731d6930e"
       define_method(:install) do
         bin.install "sqlsaga"
       end
