@@ -11,7 +11,7 @@ class Sqlsaga < Formula
   on_macos do
     if Hardware::CPU.intel?
       url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_darwin_amd64.tar.gz"
-      sha256 "1f6881a54583ba6a0c1a5b8a9462c3cdb11a369e14254fe8a89f6bf7b3f001bb"
+      sha256 "9765ef06a4246c54458db5872b186088d9ac4b633ae3896c4003a81632ade0cc"
 
       define_method(:install) do
         bin.install "sqlsaga"
@@ -19,7 +19,7 @@ class Sqlsaga < Formula
     end
     if Hardware::CPU.arm?
       url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_darwin_arm64.tar.gz"
-      sha256 "ad6a8efe783172882d5796b05b75924bc80a149ce89712942c7373b5733b6de7"
+      sha256 "81e4793cf3d87cf09289632708b7f342727e1ee34659bdca694cbd5b66ea5355"
 
       define_method(:install) do
         bin.install "sqlsaga"
@@ -30,14 +30,14 @@ class Sqlsaga < Formula
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
       url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_linux_amd64.tar.gz"
-      sha256 "f9fc9f5cc4d9b5676fd19083b27257ca1b85b60114be57061e16345633d060f7"
+      sha256 "ea07e0cd089f242c86a63bd885169b14df39470fc46b23c523deffa57f63721e"
       define_method(:install) do
         bin.install "sqlsaga"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
       url "https://github.com/bogusdeck/sqlsaga/releases/download/v0.1.9/sqlsaga_0.1.9_linux_arm64.tar.gz"
-      sha256 "1d113379c250217d67d458e2f1139fae3ac511224dfae7174dcad1738aa978ba"
+      sha256 "441246200fb17ebdbb687d6107ea87d05c70d78a33555502e3676dfb2cd27b7a"
       define_method(:install) do
         bin.install "sqlsaga"
       end
