@@ -16,11 +16,11 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/bogusdeck/sqlquest/internal/database"
-	"github.com/bogusdeck/sqlquest/internal/game"
-	"github.com/bogusdeck/sqlquest/internal/parser"
-	"github.com/bogusdeck/sqlquest/internal/tui"
-	"github.com/bogusdeck/sqlquest/internal/utils"
+	"github.com/bogusdeck/sqlsaga/internal/database"
+	"github.com/bogusdeck/sqlsaga/internal/game"
+	"github.com/bogusdeck/sqlsaga/internal/parser"
+	"github.com/bogusdeck/sqlsaga/internal/tui"
+	"github.com/bogusdeck/sqlsaga/internal/utils"
 )
 
 // Build-time variables (set via -ldflags)

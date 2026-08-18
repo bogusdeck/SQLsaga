@@ -1,0 +1,101 @@
+project_name: sqlsaga
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: sqlsaga
+    main: ./cmd/sqlquest
+    binary: sqlsaga
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+archives:
+  - id: default
+    builds:
+      - sqlsaga
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+release:
+  github:
+    owner: bogusdeck
+    name: sqlsaga
+  draft: false
+  prerelease: auto
+nfpms:
+  - id: sqlsaga
+    builds:
+      - sqlsaga
+    package_name: sqlsaga
+    vendor: bogusdeck
+    homepage: https://github.com/bogusdeck/sqlsaga
+    maintainer: bogusdeck <bogusdeck@users.noreply.github.com>
+    description: An interactive terminal game that teaches SQL through a narrative mystery story
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
+    binds:
+      - /usr/bin/sqlsaga=/usr/bin/sqlsaga
+    recommends:
+      - git
+    section: utils
+    priority: optional
+    epoch: 0
+    metadata:
+      deb:
+        depends:
+          - libc6
+        suggests:
+          - sqlite3
+    scripts:
+      postinstall: |
+        echo "SQL Saga installed! Run 'sqlsaga' to start."
+    overrides:
+      deb:
+        compression: gzip
+        compression_level: 6
+      rpm:
+        compression: gzip
+        compression_level: 6
+brews:
+  - name: sqlsaga
+    taps:
+      - bogusdeck/homebrew-sqlsaga
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@users.noreply.github.com
+    folder: Formula
+    homepage: https://github.com/bogusdeck/sqlsaga
+    description: An interactive terminal game that teaches SQL through a narrative mystery story
+    license: MIT
+    install: |
+      bin.install "sqlsaga"
+    test: |
+      system "#{bin}/sqlsaga --version"
