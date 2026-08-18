@@ -14,7 +14,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Config is the YAML persisted at ~/.sqlquest/config.yaml.
+// Config is the YAML persisted at ~/.sqlsaga/config.yaml.
 type Config struct {
 	Theme         string         `yaml:"theme"`
 	Autocomplete  bool           `yaml:"autocomplete"`
@@ -36,13 +36,13 @@ var (
 	configOnce sync.Mutex
 )
 
-// Dir returns the SQL Quest config directory, creating it if needed.
+// Dir returns the SQL Saga config directory, creating it if needed.
 func Dir() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("locate home dir: %w", err)
 	}
-	dir := filepath.Join(home, ".sqlquest")
+	dir := filepath.Join(home, ".sqlsaga")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", fmt.Errorf("mkdir %s: %w", dir, err)
 	}
@@ -55,7 +55,7 @@ func DBPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(dir, "sqlquest.db"), nil
+	return filepath.Join(dir, "sqlsaga.db"), nil
 }
 
 // Load reads the config from disk, creating a default one if missing.

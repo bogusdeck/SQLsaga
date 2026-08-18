@@ -1,4 +1,4 @@
-# Contributing to SQL Quest
+# Contributing to SQL Saga
 
 Thank you for your interest in contributing! This document explains how to contribute to the project.
 
@@ -14,13 +14,13 @@ Thank you for your interest in contributing! This document explains how to contr
 ```bash
 # Clone the repository
 git clone https://github.com/bogusdeck/sqlsaga.git
-cd sqlquest
+cd sqlsaga
 
 # Download dependencies
 go mod download
 
 # Build
-go build -o sqlquest ./cmd/sqlquest
+go build -o sqlsaga ./cmd/sqlsaga
 
 # Run tests
 go test ./...
@@ -29,14 +29,14 @@ go test ./...
 go vet ./...
 
 # Run the game
-./sqlquest
+./sqlsaga
 ```
 
 ## Project Structure
 
 ```
-sqlquest/
-├── cmd/sqlquest/          # CLI entrypoint
+sqlsaga/
+├── cmd/sqlsaga/          # CLI entrypoint
 ├── internal/
 │   ├── database/          # SQLite persistence + Firebase stub
 │   ├── game/              # Game engine, story, progress, scoring

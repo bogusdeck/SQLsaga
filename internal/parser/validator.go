@@ -142,7 +142,7 @@ func Run(dsn, schema, sampleData, userQuery string, timeout time.Duration) RunRe
 	if err != nil {
 		return RunResult{Err: fmt.Errorf("open mysql: %w", err), ExecMillis: elapsedMillis(start)}
 	}
-	dbName := fmt.Sprintf("sqlquest_%d", time.Now().UnixNano())
+	dbName := fmt.Sprintf("sqlsaga_%d", time.Now().UnixNano())
 	if _, err := baseConn.Exec("CREATE DATABASE " + dbName); err != nil {
 		baseConn.Close()
 		return RunResult{Err: fmt.Errorf("create temp db: %w", err), ExecMillis: elapsedMillis(start)}
@@ -439,7 +439,7 @@ func Explain(dsn, schema, sampleData, userQuery string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	dbName := fmt.Sprintf("sqlquest_%d", time.Now().UnixNano())
+	dbName := fmt.Sprintf("sqlsaga_%d", time.Now().UnixNano())
 	if _, err := baseConn.Exec("CREATE DATABASE " + dbName); err != nil {
 		baseConn.Close()
 		return "", err

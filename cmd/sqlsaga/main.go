@@ -1,4 +1,4 @@
-// SQL Quest is an interactive terminal game that teaches SQL through a
+// SQL Saga is an interactive terminal game that teaches SQL through a
 // narrative mystery. This is the CLI entrypoint.
 package main
 
@@ -50,7 +50,7 @@ func main() {
 	flag.Parse()
 
 	if *flagVersion {
-		fmt.Printf("sqlquest version %s\n", version)
+		fmt.Printf("sqlsaga version %s\n", version)
 		fmt.Printf("  build date: %s\n", buildDate)
 		fmt.Printf("  git commit: %s\n", gitCommit)
 		return
@@ -171,13 +171,13 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "sqlquest — interactive SQL learning game\n\n")
-	fmt.Fprintf(os.Stderr, "Usage:\n  sqlquest [flags]\n\nFlags:\n")
+	fmt.Fprintf(os.Stderr, "sqlsaga — interactive SQL learning game\n\n")
+	fmt.Fprintf(os.Stderr, "Usage:\n  sqlsaga [flags]\n\nFlags:\n")
 	flag.PrintDefaults()
 }
 
 func fail(what string, err error) {
-	fmt.Fprintf(os.Stderr, "sqlquest: %s: %v\n", what, err)
+	fmt.Fprintf(os.Stderr, "sqlsaga: %s: %v\n", what, err)
 	os.Exit(1)
 }
 

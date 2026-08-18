@@ -72,12 +72,12 @@ sudo mv sqlsaga /usr/local/bin/
 ```bash
 git clone https://github.com/bogusdeck/sqlsaga.git
 cd sqlsaga
-go build -o sqlsaga ./cmd/sqlquest
+go build -o sqlsaga ./cmd/sqlsaga
 ```
 
 ### Go install
 ```bash
-go install github.com/bogusdeck/sqlsaga/cmd/sqlquest@latest
+go install github.com/bogusdeck/sqlsaga/cmd/sqlsaga@latest
 ```
 
 ## Quick Start
@@ -163,7 +163,7 @@ go test ./...
 ### Project Structure
 
 ```
-cmd/sqlquest/           # CLI entrypoint
+cmd/sqlsaga/           # CLI entrypoint
 internal/
   game/                 # Game engine, story, progress, scoring
   parser/               # SQL execution, validation, diffing

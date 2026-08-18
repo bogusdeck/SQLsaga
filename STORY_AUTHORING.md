@@ -1,6 +1,6 @@
 # Story Authoring Guide
 
-This guide explains how to create new stories and challenges for SQL Quest.
+This guide explains how to create new stories and challenges for SQL Saga.
 
 ## Quick Start
 
@@ -108,14 +108,14 @@ Not supported (read-only mode):
 
 ```bash
 # Validate story loads
-go build -o sqlquest ./cmd/sqlquest
-./sqlquest -story your_story_id -stats
+go build -o sqlsaga ./cmd/sqlsaga
+./sqlsaga -story your_story_id -stats
 
 # Test a specific challenge
-echo "YOUR QUERY HERE" | ./sqlquest -validate /dev/stdin -story your_story_id -chapter chapter_1
+echo "YOUR QUERY HERE" | ./sqlsaga -validate /dev/stdin -story your_story_id -chapter chapter_1
 
 # Play through
-./sqlquest -story your_story_id
+./sqlsaga -story your_story_id
 ```
 
 ## Difficulty Progression Guidelines
