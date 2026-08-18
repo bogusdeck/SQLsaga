@@ -2,8 +2,10 @@ package tui
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -33,6 +35,7 @@ type App struct {
 	achievements components.AchievementsPanel
 	menu        components.Menu
 	dsnInput    textinput.Model
+	filePathInput textinput.Model
 
 	tickerStop chan struct{}
 	ticker     *time.Ticker
@@ -159,16 +162,18 @@ func NewApp(engine *game.Engine, cfg *utils.Config) *App {
 		keys:          keys,
 		hud:           hud,
 		story:         story,
+		editor:        editor,
 		results:       results,
 		completion:    completion,
 		achievements:  achievements,
 		menu:          menu,
 		dsnInput:      dsnInput,
-		editor:        editor,
 		status:        "Press Ctrl+S to submit, Ctrl+H for a hint, Tab for autocomplete, Ctrl+A for achievements, ? for help.",
 		showMenu:      true,
 		splitRatio:    0.35,
 	}
+	// Initialize main menu
+	app.populateMainMenu()
 	
 	if cfg.MySQLDSN != "" {
 		os.Setenv("MYSQL_DSN", cfg.MySQLDSN)
@@ -267,6 +272,30 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			var mcmd tea.Cmd
 			a.menu, mcmd = a.menu.Update(msg)
 			return a, mcmd
+		}
+
+		// Handle file path input for upload story
+		if a.menuMode == "upload_story" {
+			if key.Matches(msg, a.keys.Quit) {
+				a.openSettingsMenu() // Go back to settings menu
+				return a, nil
+			}
+			switch msg.Type {
+			case tea.KeyEnter:
+				filePath := strings.TrimSpace(a.filePathInput.Value())
+				if filePath == "" {
+					a.setStatus("Please enter a file path", true)
+					return a, nil
+				}
+				a.loadAndValidateStory(filePath)
+				return a, nil
+			case tea.KeyEsc:
+				a.openSettingsMenu()
+				return a, nil
+			}
+			var icmd tea.Cmd
+			a.filePathInput, icmd = a.filePathInput.Update(msg)
+			return a, icmd
 		}
 
 		if a.showHelp {
@@ -445,6 +474,24 @@ func (a *App) View() string {
 			Render(b.String())
 		return lipgloss.Place(a.width, a.height, lipgloss.Center, lipgloss.Center, box)
 	}
+	// Handle upload story input
+	if a.menuMode == "upload_story" {
+		var b strings.Builder
+		b.WriteString(a.styles.PanelTitle.Render(" Upload Story "))
+		b.WriteString("\n\n")
+		b.WriteString("Enter the full path to your story JSON file:\n\n")
+		b.WriteString(a.filePathInput.View())
+		b.WriteString("\n\n")
+		b.WriteString(a.styles.Status.Render("Press Enter to load the story, Esc to cancel."))
+		
+		box := lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#7D56F4")).
+			Padding(1, 2).
+			Render(b.String())
+		return lipgloss.Place(a.width, a.height, lipgloss.Center, lipgloss.Center, box)
+	}
+	
 	// Show main menu on startup
 	if a.showMenu {
 		panel := a.menu.View()
@@ -813,6 +860,8 @@ func (a *App) handleMenuAction(action string) {
 	switch action {
 	case "new_game":
 		a.openStoryPicker()
+	case "upload_story":
+		a.openUploadStory()
 	case "continue":
 		a.openContinueMenu()
 	case "select_story":
@@ -842,6 +891,7 @@ func (a *App) handleMenuAction(action string) {
 		a.menuMode = "main"
 		a.menu.SetTitle(components.AsciiTitle)
 		a.populateMainMenu()
+		a.showMenu = true
 	case "play_story":
 		a.startPickedStory()
 	default:
@@ -899,6 +949,7 @@ func (a *App) populateMainMenu() {
 	}
 	items = append(items, 
 		components.MenuItem{Title: "New Game", Description: "Pick a story to start", Action: "new_game"},
+		components.MenuItem{Title: "Upload Story", Description: "Load your own story from JSON file", Action: "upload_story"},
 		components.MenuItem{Title: "Stats", Description: "View your statistics", Action: "stats"},
 		components.MenuItem{Title: "Achievements", Description: "View unlocked achievements", Action: "achievements"},
 		components.MenuItem{Title: "Settings", Description: "Configure the game", Action: "settings"},
@@ -1035,6 +1086,81 @@ func (a *App) openStatsMenu() {
 	a.menu.SetEmptyMessage(a.composeStats())
 	a.menuMode = "stats"
 	a.setStatus("Press Esc to go back.", false)
+}
+
+func (a *App) openUploadStory() {
+	a.menuMode = "upload_story"
+	a.menu.SetTitle("UPLOAD STORY")
+	a.menu.SetItems(nil)
+	a.menu.SetEmptyMessage("Enter the full path to your story JSON file:")
+	a.filePathInput = textinput.New()
+	a.filePathInput.Placeholder = "/path/to/story.json"
+	a.filePathInput.CharLimit = 256
+	a.filePathInput.Width = 50
+	a.filePathInput.Focus()
+	a.setStatus("Press Enter to load the story, Esc to cancel.", false)
+}
+
+// loadAndValidateStory reads a story from the given file path, validates it,
+// saves it to the local stories directory, and starts the game with it.
+func (a *App) loadAndValidateStory(filePath string) {
+	// Read the file
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		a.setStatus(fmt.Sprintf("Error reading file: %v", err), true)
+		return
+	}
+
+	// Parse the story
+	var story game.Story
+	if err := json.Unmarshal(data, &story); err != nil {
+		a.setStatus(fmt.Sprintf("Error parsing JSON: %v", err), true)
+		return
+	}
+
+	// Validate the story
+	if err := game.ValidateStory(&story); err != nil {
+		a.setStatus(fmt.Sprintf("Invalid story: %v", err), true)
+		return
+	}
+
+	// Save to local stories directory
+	localDir, err := utils.StoriesDir()
+	if err != nil {
+		a.setStatus(fmt.Sprintf("Error getting stories directory: %v", err), true)
+		return
+	}
+
+	// Create the directory if it doesn't exist
+	if err := os.MkdirAll(localDir, 0o755); err != nil {
+		a.setStatus(fmt.Sprintf("Error creating stories directory: %v", err), true)
+		return
+	}
+
+	// Generate a filename based on story ID
+	fileName := story.ID + ".json"
+	if fileName == ".json" {
+		// Fallback if ID is empty (shouldn't happen due to validation)
+		fileName = "uploaded_story.json"
+	}
+	destPath := filepath.Join(localDir, fileName)
+
+	// Write the file
+	if err := os.WriteFile(destPath, data, 0o644); err != nil {
+		a.setStatus(fmt.Sprintf("Error saving story: %v", err), true)
+		return
+	}
+
+	// Load the story and start the game
+	loadedStory := game.LoadedStory{Story: story, FilePath: destPath}
+	a.engine.SetStory(loadedStory.Story)
+	a.editor.Reset()
+	a.results.Clear()
+	a.showMenu = false
+	a.menuMode = "main"
+	a.populateMainMenu()
+	a.bindCurrentChallenge()
+	a.setStatus(fmt.Sprintf("Story loaded: %s", story.Title), false)
 }
 
 func (a *App) openAchievementsMenu() {
