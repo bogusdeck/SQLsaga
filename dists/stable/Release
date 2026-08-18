@@ -1,0 +1,8 @@
+Origin: SQL Saga
+Label: SQL Saga APT Repository
+Suite: stable
+Codename: stable
+Architectures: amd64 arm64
+Components: main
+Description: APT repository for SQL Saga - SQL learning game
+Date: Wed, 19 Aug 2026 00:36:23 +0530

@@ -1,0 +1,15 @@
+Package: sqlsaga
+Version: 0:0.1.9
+Section: utils
+Priority: optional
+Architecture: arm64
+Maintainer: bogusdeck <bogusdeck@users.noreply.github.com>
+Installed-Size: 10624
+Recommends: git
+Homepage: https://github.com/bogusdeck/sqlsaga
+Description: An interactive terminal game that teaches SQL through a narrative mystery story
+Filename: pool/main/s/sqlsaga/sqlsaga_0.1.9_linux_arm64.deb
+Size: 4512070
+SHA256: 69b21dd4dda696370bc8adf4eaf34d28de2f6f4505b32f7ab40bd6afb5eed64b
+MD5sum: a596004cb9fb74c212123326c3e68c2a
+
