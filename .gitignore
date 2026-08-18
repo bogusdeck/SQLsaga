@@ -1,0 +1,19 @@
+# Build artifacts
+/sqlquest
+/dist/
+*.exe
+*.test
+*.out
+
+# Go workspace
+go.work
+go.work.sum
+
+# Local config
+*.local.yaml
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store

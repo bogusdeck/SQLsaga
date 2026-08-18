@@ -1,0 +1,181 @@
+{
+  "id": "quest_dragon",
+  "genre": "quest",
+  "title": "The Dragon's Hoard",
+  "description": "An ancient dragon has awoken and its hoard of magical items must be cataloged. Use SQL to organize the treasure, track the dragon's movements, and plan the retrieval.",
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "title": "The Cave Entrance",
+      "narrative": "You stand before the dragon's cave. The entrance is guarded by magical runes that respond to queries. The village elder gives you a scroll describing the treasure categories and their properties.",
+      "challenges": [
+        {
+          "id": "q1_1",
+          "type": "catalog",
+          "narrative": "The scroll lists all known treasure types. First, list every treasure category with its rarity level. This will help you know what to expect inside.",
+          "schema": "CREATE TABLE treasure_types (id INTEGER PRIMARY KEY, category TEXT, rarity TEXT);",
+          "sample_data": "INSERT INTO treasure_types (id, category, rarity) VALUES (1, 'Weapons', 'Legendary'), (2, 'Armor', 'Epic'), (3, 'Potions', 'Common'), (4, 'Scrolls', 'Rare'), (5, 'Artifacts', 'Mythic'), (6, 'Gems', 'Rare'), (7, 'Gold', 'Common');",
+          "objective": "Select all columns from treasure_types.",
+          "solution": "SELECT * FROM treasure_types;",
+          "hints": [
+            "Use SELECT * to get all columns.",
+            "No WHERE clause needed - we want everything."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["id", "category", "rarity"],
+            "expected_rows": [
+              {"id": 1, "category": "Weapons", "rarity": "Legendary"},
+              {"id": 2, "category": "Armor", "rarity": "Epic"},
+              {"id": 3, "category": "Potions", "rarity": "Common"},
+              {"id": 4, "category": "Scrolls", "rarity": "Rare"},
+              {"id": 5, "category": "Artifacts", "rarity": "Mythic"},
+              {"id": 6, "category": "Gems", "rarity": "Rare"},
+              {"id": 7, "category": "Gold", "rarity": "Common"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "q1_2",
+          "type": "catalog",
+          "narrative": "The dragon prefers certain treasure types. Filter the list to show only Legendary, Epic, and Mythic rarities - these are what the dragon values most.",
+          "schema": "CREATE TABLE treasure_types (id INTEGER PRIMARY KEY, category TEXT, rarity TEXT);",
+          "sample_data": "INSERT INTO treasure_types (id, category, rarity) VALUES (1, 'Weapons', 'Legendary'), (2, 'Armor', 'Epic'), (3, 'Potions', 'Common'), (4, 'Scrolls', 'Rare'), (5, 'Artifacts', 'Mythic'), (6, 'Gems', 'Rare'), (7, 'Gold', 'Common');",
+          "objective": "Select category and rarity where rarity is Legendary, Epic, or Mythic.",
+          "solution": "SELECT category, rarity FROM treasure_types WHERE rarity IN ('Legendary', 'Epic', 'Mythic');",
+          "hints": [
+            "Use IN operator to match multiple values.",
+            "The syntax is: WHERE column IN ('value1', 'value2', 'value3')"
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["category", "rarity"],
+            "expected_rows": [
+              {"category": "Weapons", "rarity": "Legendary"},
+              {"category": "Armor", "rarity": "Epic"},
+              {"category": "Artifacts", "rarity": "Mythic"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "q1_3",
+          "type": "catalog",
+          "narrative": "Now check the actual hoard inventory. The dragon's hoard table lists every item. Count how many items exist in each category.",
+          "schema": "CREATE TABLE hoard (id INTEGER PRIMARY KEY, item_name TEXT, category TEXT, value INTEGER);",
+          "sample_data": "INSERT INTO hoard (id, item_name, category, value) VALUES (1, 'Excalibur', 'Weapons', 50000), (2, 'Dragon Scale Mail', 'Armor', 30000), (3, 'Health Potion', 'Potions', 50), (4, 'Mana Potion', 'Potions', 75), (5, 'Scroll of Fireball', 'Scrolls', 500), (6, 'Scroll of Teleport', 'Scrolls', 800), (7, 'Crown of Kings', 'Artifacts', 100000), (8, 'Ruby', 'Gems', 5000), (9, 'Sapphire', 'Gems', 7000), (10, 'Gold Coins', 'Gold', 10000);",
+          "objective": "Count items per category. Show category and item_count. Sort by count descending.",
+          "solution": "SELECT category, COUNT(*) AS item_count FROM hoard GROUP BY category ORDER BY item_count DESC;",
+          "hints": [
+            "Use GROUP BY category to group items.",
+            "COUNT(*) counts rows in each group.",
+            "ORDER BY item_count DESC sorts highest first."
+          ],
+          "xp": 150,
+          "time_limit": 180,
+          "validation": {
+            "expected_columns": ["category", "item_count"],
+            "expected_rows": [
+              {"category": "Potions", "item_count": 2},
+              {"category": "Scrolls", "item_count": 2},
+              {"category": "Gems", "item_count": 2},
+              {"category": "Weapons", "item_count": 1},
+              {"category": "Armor", "item_count": 1},
+              {"category": "Artifacts", "item_count": 1},
+              {"category": "Gold", "item_count": 1}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "chapter_2",
+      "title": "Dragon Patterns",
+      "narrative": "The dragon leaves the cave on a schedule. Track its movements using the sightings table to plan your heist.",
+      "prerequisite": "chapter_1",
+      "challenges": [
+        {
+          "id": "q2_1",
+          "type": "tracking",
+          "narrative": "The sightings table records when and where the dragon was spotted. Find the dragon's most recent location and time.",
+          "schema": "CREATE TABLE sightings (id INTEGER PRIMARY KEY, location TEXT, sighted_at TEXT, activity TEXT);",
+          "sample_data": "INSERT INTO sightings (id, location, sighted_at, activity) VALUES (1, 'Mountain Peak', '2024-01-10 06:00:00', 'hunting'), (2, 'Crystal Lake', '2024-01-12 14:30:00', 'drinking'), (3, 'Ancient Ruins', '2024-01-14 22:00:00', 'sleeping'), (4, 'Volcano Crater', '2024-01-15 08:00:00', 'feeding');",
+          "objective": "Select location, sighted_at, and activity for the most recent sighting (latest sighted_at).",
+          "solution": "SELECT location, sighted_at, activity FROM sightings ORDER BY sighted_at DESC LIMIT 1;",
+          "hints": [
+            "ORDER BY sighted_at DESC puts latest first.",
+            "LIMIT 1 returns only the top row."
+          ],
+          "xp": 150,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["location", "sighted_at", "activity"],
+            "expected_rows": [
+              {"location": "Volcano Crater", "sighted_at": "2024-01-15 08:00:00", "activity": "feeding"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "q2_2",
+          "type": "tracking",
+          "narrative": "The dragon follows a pattern - it visits water sources every 2-3 days. Count sightings per location to find its favorite spots.",
+          "schema": "CREATE TABLE sightings (id INTEGER PRIMARY KEY, location TEXT, sighted_at TEXT, activity TEXT);",
+          "sample_data": "INSERT INTO sightings (id, location, sighted_at, activity) VALUES (1, 'Mountain Peak', '2024-01-10 06:00:00', 'hunting'), (2, 'Crystal Lake', '2024-01-12 14:30:00', 'drinking'), (3, 'Ancient Ruins', '2024-01-14 22:00:00', 'sleeping'), (4, 'Volcano Crater', '2024-01-15 08:00:00', 'feeding'), (5, 'Crystal Lake', '2024-01-16 10:00:00', 'drinking'), (6, 'Mountain Peak', '2024-01-17 05:00:00', 'hunting'), (7, 'Crystal Lake', '2024-01-18 13:00:00', 'drinking');",
+          "objective": "Count sightings per location. Show location and sighting_count. Sort by count descending.",
+          "solution": "SELECT location, COUNT(*) AS sighting_count FROM sightings GROUP BY location ORDER BY sighting_count DESC;",
+          "hints": [
+            "GROUP BY location to aggregate.",
+            "COUNT(*) counts rows per location.",
+            "ORDER BY sighting_count DESC for most visited first."
+          ],
+          "xp": 150,
+          "time_limit": 180,
+          "validation": {
+            "expected_columns": ["location", "sighting_count"],
+            "expected_rows": [
+              {"location": "Crystal Lake", "sighting_count": 3},
+              {"location": "Mountain Peak", "sighting_count": 2},
+              {"location": "Ancient Ruins", "sighting_count": 1},
+              {"location": "Volcano Crater", "sighting_count": 1}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "q2_3",
+          "type": "tracking",
+          "narrative": "Calculate the average days between sightings at Crystal Lake to predict the next visit.",
+          "schema": "CREATE TABLE sightings (id INTEGER PRIMARY KEY, location TEXT, sighted_at TEXT, activity TEXT);",
+          "sample_data": "INSERT INTO sightings (id, location, sighted_at, activity) VALUES (1, 'Crystal Lake', '2024-01-12 14:30:00', 'drinking'), (2, 'Crystal Lake', '2024-01-16 10:00:00', 'drinking'), (3, 'Crystal Lake', '2024-01-18 13:00:00', 'drinking');",
+          "objective": "For Crystal Lake sightings, calculate the average days between consecutive sightings. Return avg_days_between.",
+          "solution": "WITH ordered AS (SELECT sighted_at, LAG(sighted_at) OVER (ORDER BY sighted_at) AS prev_sighted FROM sightings WHERE location = 'Crystal Lake'), diffs AS (SELECT julianday(sighted_at) - julianday(prev_sighted) AS days_diff FROM ordered WHERE prev_sighted IS NOT NULL) SELECT AVG(days_diff) AS avg_days_between FROM diffs;",
+          "hints": [
+            "Use LAG() window function to get previous sighting time.",
+            "julianday() converts datetime to day number for subtraction.",
+            "Filter out the first row (no previous) with WHERE prev_sighted IS NOT NULL."
+          ],
+          "xp": 200,
+          "time_limit": 240,
+          "validation": {
+            "expected_columns": ["avg_days_between"],
+            "expected_rows": [
+              {"avg_days_between": 2.0}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    }
+  ]
+}

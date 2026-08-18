@@ -1,0 +1,261 @@
+{
+  "id": "mystery_artifact",
+  "genre": "mystery",
+  "title": "The Mystery of the Missing Artifact",
+  "description": "A priceless magical artifact has vanished from the Great Library. You are a detective tasked with using SQL to sift through records, question witnesses stored in tables, and uncover the thief.",
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "title": "The Crime Scene",
+      "narrative": "You arrive at the Great Library on a cold morning. The display case in the Hall of Relics is shattered, and the Crystal of Lior is gone. The head librarian, Elowen, hands you a leather-bound ledger and a stack of visitor sign-in sheets. Everything we have is in these tables, she says. Find who was here.",
+      "challenges": [
+        {
+          "id": "c1_1",
+          "type": "investigation",
+          "narrative": "Elowen tells you the artifact vanished between 2:00 PM and 3:00 PM yesterday. The library keeps a visitors table with everyone who signed in. Start by pulling every visitor who was on-site during that one-hour window so you can see who had the opportunity.",
+          "schema": "CREATE TABLE visitors (id INTEGER PRIMARY KEY, name TEXT, visit_time TEXT, purpose TEXT);",
+          "sample_data": "INSERT INTO visitors (id, name, visit_time, purpose) VALUES (1, 'Aldric the Reader', '2024-01-15 10:15:00', 'study'), (2, 'Mira Frostweave', '2024-01-15 11:42:00', 'research'), (3, 'Brennan Cole', '2024-01-15 13:05:00', 'return book'), (4, 'Yenna Birch', '2024-01-15 13:50:00', 'meeting'), (5, 'Sarah Holloway', '2024-01-15 14:12:00', 'tour'), (6, 'Aldric the Reader', '2024-01-15 14:25:00', 'reading'), (7, 'Viktor Drane', '2024-01-15 14:33:00', 'private reading'), (8, 'James Marrow', '2024-01-15 14:48:00', 'borrowing'), (9, 'Cora Pell', '2024-01-15 14:55:00', 'tour'), (10, 'Hugo Fen', '2024-01-15 15:02:00', 'meeting'), (11, 'Mira Frostweave', '2024-01-15 15:30:00', 'research'), (12, 'James Marrow', '2024-01-15 16:10:00', 'returning book'), (13, 'Tessa Quill', '2024-01-15 17:20:00', 'study'), (14, 'Cora Pell', '2024-01-15 18:01:00', 'study'), (15, 'Hugo Fen', '2024-01-15 19:00:00', 'closing duties');",
+          "objective": "List every visitor who was at the library between 14:00 and 15:00 on 2024-01-15. Show all columns.",
+          "solution": "SELECT * FROM visitors WHERE visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00';",
+          "hints": [
+            "Use a WHERE clause to filter by time.",
+            "SQLite supports BETWEEN for time ranges; the format is 'YYYY-MM-DD HH:MM:SS'.",
+            "Filter for visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00'."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["id", "name", "visit_time", "purpose"],
+            "expected_rows": [
+              {"id": 5, "name": "Sarah Holloway", "visit_time": "2024-01-15 14:12:00", "purpose": "tour"},
+              {"id": 6, "name": "Aldric the Reader", "visit_time": "2024-01-15 14:25:00", "purpose": "reading"},
+              {"id": 7, "name": "Viktor Drane", "visit_time": "2024-01-15 14:33:00", "purpose": "private reading"},
+              {"id": 8, "name": "James Marrow", "visit_time": "2024-01-15 14:48:00", "purpose": "borrowing"},
+              {"id": 9, "name": "Cora Pell", "visit_time": "2024-01-15 14:55:00", "purpose": "tour"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c1_2",
+          "type": "investigation",
+          "narrative": "Good. Five people were in the library at the right time. Elowen mentions that the artifact case is in a restricted wing and only members with a private or research purpose are allowed past the velvet rope. Sort the five suspects by name so the head librarian can read them off, and limit the list to the top five.",
+          "schema": "CREATE TABLE visitors (id INTEGER PRIMARY KEY, name TEXT, visit_time TEXT, purpose TEXT);",
+          "sample_data": "INSERT INTO visitors (id, name, visit_time, purpose) VALUES (1, 'Aldric the Reader', '2024-01-15 10:15:00', 'study'), (2, 'Mira Frostweave', '2024-01-15 11:42:00', 'research'), (3, 'Brennan Cole', '2024-01-15 13:05:00', 'return book'), (4, 'Yenna Birch', '2024-01-15 13:50:00', 'meeting'), (5, 'Sarah Holloway', '2024-01-15 14:12:00', 'tour'), (6, 'Aldric the Reader', '2024-01-15 14:25:00', 'reading'), (7, 'Viktor Drane', '2024-01-15 14:33:00', 'private reading'), (8, 'James Marrow', '2024-01-15 14:48:00', 'borrowing'), (9, 'Cora Pell', '2024-01-15 14:55:00', 'tour'), (10, 'Hugo Fen', '2024-01-15 15:02:00', 'meeting'), (11, 'Mira Frostweave', '2024-01-15 15:30:00', 'research'), (12, 'James Marrow', '2024-01-15 16:10:00', 'returning book'), (13, 'Tessa Quill', '2024-01-15 17:20:00', 'study'), (14, 'Cora Pell', '2024-01-15 18:01:00', 'study'), (15, 'Hugo Fen', '2024-01-15 19:00:00', 'closing duties');",
+          "objective": "Return the id and name of visitors in the 14:00-15:00 window, sorted alphabetically by name (A first), limited to 5 rows.",
+          "solution": "SELECT id, name FROM visitors WHERE visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00' ORDER BY name ASC LIMIT 5;",
+          "hints": [
+            "ORDER BY controls the sort; ASC for ascending, DESC for descending.",
+            "LIMIT n caps the number of rows returned.",
+            "Try: ORDER BY name ASC LIMIT 5."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["id", "name"],
+            "expected_rows": [
+              {"id": 6, "name": "Aldric the Reader"},
+              {"id": 9, "name": "Cora Pell"},
+              {"id": 8, "name": "James Marrow"},
+              {"id": 5, "name": "Sarah Holloway"},
+              {"id": 7, "name": "Viktor Drane"}
+            ],
+            "allow_order": false,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c1_3",
+          "type": "investigation",
+          "narrative": "Elowen pulls out a second ledger: a table of evidence items found near the scene. Each row is a piece of evidence (a glove, a torn page, a muddy boot) tagged with the suspect it was found near. Group the evidence by suspect name and count how many pieces point at each one, sorted by count descending. The thief is the one with the most evidence.",
+          "schema": "CREATE TABLE evidence (id INTEGER PRIMARY KEY, suspect TEXT, item TEXT, found_at TEXT);",
+          "sample_data": "INSERT INTO evidence (id, suspect, item, found_at) VALUES (1, 'Viktor Drane', 'black glove', 'reading room'), (2, 'Viktor Drane', 'torn page', 'reading room'), (3, 'Viktor Drane', 'glass shard', 'display case'), (4, 'Cora Pell', 'hairpin', 'hallway'), (5, 'Cora Pell', 'tour badge', 'hallway'), (6, 'James Marrow', 'mud on boot', 'front steps'), (7, 'James Marrow', 'late return slip', 'front steps'), (8, 'Aldric the Reader', 'bookmark', 'reading room'), (9, 'Sarah Holloway', 'tour brochure', 'gift shop'), (10, 'Viktor Drane', 'crystal dust', 'display case');",
+          "objective": "For each suspect, count the number of evidence items (alias the count column as 'items'). Show the suspect and the count. Sort the result by count, highest first.",
+          "solution": "SELECT suspect, COUNT(*) AS items FROM evidence GROUP BY suspect ORDER BY items DESC;",
+          "hints": [
+            "GROUP BY collapses rows that share a value in the grouped column.",
+            "COUNT(*) counts rows in each group; pair it with AS to give the column a name.",
+            "Try: GROUP BY suspect ORDER BY COUNT(*) DESC."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["suspect", "items"],
+            "expected_rows": [
+              {"suspect": "Viktor Drane", "items": 4},
+              {"suspect": "Cora Pell", "items": 2},
+              {"suspect": "James Marrow", "items": 2},
+              {"suspect": "Aldric the Reader", "items": 1},
+              {"suspect": "Sarah Holloway", "items": 1}
+            ],
+            "allow_order": false,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "chapter_2",
+      "title": "The Alibi Check",
+      "narrative": "With Viktor Drane as the prime suspect, you need to verify his alibi. The library has a membership table tracking member tiers and a loans table recording book checkouts. Cross-reference these to see if Viktor's story holds up.",
+      "prerequisite": "chapter_1",
+      "challenges": [
+        {
+          "id": "c2_1",
+          "type": "investigation",
+          "narrative": "Viktor claims he was in the 'private reading' room because he's a Premium member. Check the members table to see his tier and when his membership started. Return his name, tier, and start_date.",
+          "schema": "CREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, tier TEXT, start_date TEXT);",
+          "sample_data": "INSERT INTO members (id, name, tier, start_date) VALUES (1, 'Aldric the Reader', 'Basic', '2023-01-15'), (2, 'Mira Frostweave', 'Premium', '2022-06-20'), (3, 'Viktor Drane', 'Premium', '2023-11-01'), (4, 'Cora Pell', 'Basic', '2024-01-10'), (5, 'James Marrow', 'Basic', '2023-03-05');",
+          "objective": "Select name, tier, and start_date for Viktor Drane from the members table.",
+          "solution": "SELECT name, tier, start_date FROM members WHERE name = 'Viktor Drane';",
+          "hints": [
+            "Use WHERE to filter by name.",
+            "Select specific columns by listing them after SELECT."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["name", "tier", "start_date"],
+            "expected_rows": [
+              {"name": "Viktor Drane", "tier": "Premium", "start_date": "2023-11-01"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c2_2",
+          "type": "investigation",
+          "narrative": "Now check the loans table to see what books Viktor checked out around the time of the theft. Join members and loans on member_id to get Viktor's loan history with book titles. Return the book_title and checkout_time.",
+          "schema": "CREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, tier TEXT, start_date TEXT); CREATE TABLE loans (id INTEGER PRIMARY KEY, member_id INTEGER, book_title TEXT, checkout_time TEXT);",
+          "sample_data": "INSERT INTO members (id, name, tier, start_date) VALUES (1, 'Aldric the Reader', 'Basic', '2023-01-15'), (2, 'Mira Frostweave', 'Premium', '2022-06-20'), (3, 'Viktor Drane', 'Premium', '2023-11-01'), (4, 'Cora Pell', 'Basic', '2024-01-10'), (5, 'James Marrow', 'Basic', '2023-03-05'); INSERT INTO loans (id, member_id, book_title, checkout_time) VALUES (1, 3, 'Ancient Runes', '2024-01-15 13:55:00'), (2, 3, 'Crystal Lore', '2024-01-15 14:05:00'), (3, 3, 'Forbidden Magic', '2024-01-15 14:55:00'), (4, 1, 'History of Libraries', '2024-01-15 10:20:00'), (5, 2, 'Ice Magic', '2024-01-15 11:45:00');",
+          "objective": "Join members and loans to show Viktor Drane's book checkouts. Return book_title and checkout_time.",
+          "solution": "SELECT l.book_title, l.checkout_time FROM loans l JOIN members m ON l.member_id = m.id WHERE m.name = 'Viktor Drane';",
+          "hints": [
+            "Use JOIN to combine tables on a common column.",
+            "Filter by the member's name from the members table.",
+            "Select columns from the loans table using the l. prefix."
+          ],
+          "xp": 150,
+          "time_limit": 180,
+          "validation": {
+            "expected_columns": ["book_title", "checkout_time"],
+            "expected_rows": [
+              {"book_title": "Ancient Runes", "checkout_time": "2024-01-15 13:55:00"},
+              {"book_title": "Crystal Lore", "checkout_time": "2024-01-15 14:05:00"},
+              {"book_title": "Forbidden Magic", "checkout_time": "2024-01-15 14:55:00"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c2_3",
+          "type": "investigation",
+          "narrative": "The checkout times show Viktor was at the desk at 14:05 and 14:55. But the theft was 14:00-15:00. Check the security_log table for door access events. Count how many times Viktor entered/exited the restricted wing during the theft window.",
+          "schema": "CREATE TABLE security_log (id INTEGER PRIMARY KEY, member_name TEXT, door TEXT, event_time TEXT, direction TEXT);",
+          "sample_data": "INSERT INTO security_log (id, member_name, door, event_time, direction) VALUES (1, 'Viktor Drane', 'Restricted Wing', '2024-01-15 13:58:00', 'enter'), (2, 'Viktor Drane', 'Restricted Wing', '2024-01-15 14:02:00', 'exit'), (3, 'Viktor Drane', 'Restricted Wing', '2024-01-15 14:05:00', 'enter'), (4, 'Viktor Drane', 'Restricted Wing', '2024-01-15 14:55:00', 'exit'), (5, 'Viktor Drane', 'Restricted Wing', '2024-01-15 14:58:00', 'enter'), (6, 'Mira Frostweave', 'Main Hall', '2024-01-15 14:10:00', 'enter'), (7, 'Cora Pell', 'Main Hall', '2024-01-15 14:50:00', 'enter');",
+          "objective": "Count Viktor Drane's entries and exits at the Restricted Wing door between 14:00 and 15:00. Show direction and count.",
+          "solution": "SELECT direction, COUNT(*) AS count FROM security_log WHERE member_name = 'Viktor Drane' AND door = 'Restricted Wing' AND event_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00' GROUP BY direction;",
+          "hints": [
+            "Filter by member_name, door, and time range.",
+            "Use GROUP BY direction to separate enters from exits.",
+            "COUNT(*) will give you the count per direction."
+          ],
+          "xp": 150,
+          "time_limit": 180,
+          "validation": {
+            "expected_columns": ["direction", "count"],
+            "expected_rows": [
+              {"direction": "enter", "count": 2},
+              {"direction": "exit", "count": 2}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "chapter_3",
+      "title": "The Final Confrontation",
+      "narrative": "The evidence mounts. Viktor Drane accessed the restricted wing multiple times during the theft window. Now examine the display_case_log to find the exact moment the crystal was taken, and identify the accomplice from the visitor_signatures table.",
+      "prerequisite": "chapter_2",
+      "challenges": [
+        {
+          "id": "c3_1",
+          "type": "investigation",
+          "narrative": "The display_case_log records every time the case was opened. Find the exact timestamp when it was opened during the theft window (14:00-15:00). Return the timestamp and action.",
+          "schema": "CREATE TABLE display_case_log (id INTEGER PRIMARY KEY, action TEXT, timestamp TEXT);",
+          "sample_data": "INSERT INTO display_case_log (id, action, timestamp) VALUES (1, 'closed', '2024-01-15 13:55:00'), (2, 'opened', '2024-01-15 14:33:12'), (3, 'closed', '2024-01-15 14:33:45'), (4, 'opened', '2024-01-15 15:10:00');",
+          "objective": "Select timestamp and action for display case opens between 14:00 and 15:00 on 2024-01-15.",
+          "solution": "SELECT timestamp, action FROM display_case_log WHERE action = 'opened' AND timestamp BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00';",
+          "hints": [
+            "Filter by action = 'opened' and the time range.",
+            "Use BETWEEN for the timestamp range."
+          ],
+          "xp": 150,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["timestamp", "action"],
+            "expected_rows": [
+              {"timestamp": "2024-01-15 14:33:12", "action": "opened"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c3_2",
+          "type": "investigation",
+          "narrative": "The case was opened at 14:33:12. Check the visitor_signatures table - anyone who signed the guest book near that time might be an accomplice. Find visitors who signed between 14:30 and 14:35.",
+          "schema": "CREATE TABLE visitor_signatures (id INTEGER PRIMARY KEY, name TEXT, signature_time TEXT);",
+          "sample_data": "INSERT INTO visitor_signatures (id, name, signature_time) VALUES (1, 'Viktor Drane', '2024-01-15 14:31:00'), (2, 'Mira Frostweave', '2024-01-15 14:32:30'), (3, 'Cora Pell', '2024-01-15 14:55:00'), (4, 'Aldric the Reader', '2024-01-15 14:20:00');",
+          "objective": "Select name and signature_time for signatures between 14:30 and 14:35 on 2024-01-15.",
+          "solution": "SELECT name, signature_time FROM visitor_signatures WHERE signature_time BETWEEN '2024-01-15 14:30:00' AND '2024-01-15 14:35:00';",
+          "hints": [
+            "Use BETWEEN with the precise time window.",
+            "Select name and signature_time columns."
+          ],
+          "xp": 150,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["name", "signature_time"],
+            "expected_rows": [
+              {"name": "Viktor Drane", "signature_time": "2024-01-15 14:31:00"},
+              {"name": "Mira Frostweave", "signature_time": "2024-01-15 14:32:30"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c3_3",
+          "type": "investigation",
+          "narrative": "Case closed. Viktor Drane and Mira Frostweave were both at the scene. The evidence shows Viktor took the Crystal, and Mira was the lookout. Write a final query that summarizes the case: for each suspect (Viktor, Mira), show their tier from members, total evidence count from evidence, and total restricted wing entries from security_log.",
+          "schema": "CREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, tier TEXT); CREATE TABLE evidence (id INTEGER PRIMARY KEY, suspect TEXT); CREATE TABLE security_log (id INTEGER PRIMARY KEY, member_name TEXT, door TEXT);",
+          "sample_data": "INSERT INTO members (id, name, tier) VALUES (1, 'Viktor Drane', 'Premium'), (2, 'Mira Frostweave', 'Premium'), (3, 'Aldric the Reader', 'Basic'); INSERT INTO evidence (id, suspect) VALUES (1, 'Viktor Drane'), (2, 'Viktor Drane'), (3, 'Viktor Drane'), (4, 'Viktor Drane'), (5, 'Mira Frostweave'); INSERT INTO security_log (id, member_name, door) VALUES (1, 'Viktor Drane', 'Restricted Wing'), (2, 'Viktor Drane', 'Restricted Wing'), (3, 'Viktor Drane', 'Restricted Wing'), (4, 'Viktor Drane', 'Restricted Wing'), (5, 'Mira Frostweave', 'Main Hall');",
+          "objective": "For Viktor Drane and Mira Frostweave, show name, tier, evidence_count, and wing_entries. Use subqueries or CTEs.",
+          "solution": "WITH ev AS (SELECT suspect AS name, COUNT(*) AS evidence_count FROM evidence WHERE suspect IN ('Viktor Drane', 'Mira Frostweave') GROUP BY suspect), wl AS (SELECT member_name AS name, COUNT(*) AS wing_entries FROM security_log WHERE member_name IN ('Viktor Drane', 'Mira Frostweave') AND door = 'Restricted Wing' GROUP BY member_name) SELECT m.name, m.tier, COALESCE(e.evidence_count, 0) AS evidence_count, COALESCE(w.wing_entries, 0) AS wing_entries FROM members m LEFT JOIN ev e ON m.name = e.name LEFT JOIN wl w ON m.name = w.name WHERE m.name IN ('Viktor Drane', 'Mira Frostweave');",
+          "hints": [
+            "Use CTEs (WITH clause) to compute evidence_count and wing_entries separately.",
+            "Then join with members table using LEFT JOIN to include all suspects.",
+            "Use COALESCE to handle missing data (0 for no evidence/entries)."
+          ],
+          "xp": 200,
+          "time_limit": 240,
+          "validation": {
+            "expected_columns": ["name", "tier", "evidence_count", "wing_entries"],
+            "expected_rows": [
+              {"name": "Viktor Drane", "tier": "Premium", "evidence_count": 4, "wing_entries": 4},
+              {"name": "Mira Frostweave", "tier": "Premium", "evidence_count": 1, "wing_entries": 0}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    }
+  ]
+}

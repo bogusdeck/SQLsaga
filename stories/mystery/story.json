@@ -1,0 +1,99 @@
+{
+  "id": "mystery_artifact",
+  "genre": "mystery",
+  "title": "The Mystery of the Missing Artifact",
+  "description": "A priceless magical artifact has vanished from the Great Library. You are a detective tasked with using SQL to sift through records, question witnesses stored in tables, and uncover the thief.",
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "title": "The Crime Scene",
+      "narrative": "You arrive at the Great Library on a cold morning. The display case in the Hall of Relics is shattered, and the Crystal of Lior is gone. The head librarian, Elowen, hands you a leather-bound ledger and a stack of visitor sign-in sheets. Everything we have is in these tables, she says. Find who was here.",
+      "challenges": [
+        {
+          "id": "c1_1",
+          "type": "investigation",
+          "narrative": "Elowen tells you the artifact vanished between 2:00 PM and 3:00 PM yesterday. The library keeps a visitors table with everyone who signed in. Start by pulling every visitor who was on-site during that one-hour window so you can see who had the opportunity.",
+          "schema": "CREATE TABLE visitors (id INTEGER PRIMARY KEY, name TEXT, visit_time TEXT, purpose TEXT);",
+          "sample_data": "INSERT INTO visitors (id, name, visit_time, purpose) VALUES (1, 'Aldric the Reader', '2024-01-15 10:15:00', 'study'), (2, 'Mira Frostweave', '2024-01-15 11:42:00', 'research'), (3, 'Brennan Cole', '2024-01-15 13:05:00', 'return book'), (4, 'Yenna Birch', '2024-01-15 13:50:00', 'meeting'), (5, 'Sarah Holloway', '2024-01-15 14:12:00', 'tour'), (6, 'Aldric the Reader', '2024-01-15 14:25:00', 'reading'), (7, 'Viktor Drane', '2024-01-15 14:33:00', 'private reading'), (8, 'James Marrow', '2024-01-15 14:48:00', 'borrowing'), (9, 'Cora Pell', '2024-01-15 14:55:00', 'tour'), (10, 'Hugo Fen', '2024-01-15 15:02:00', 'meeting'), (11, 'Mira Frostweave', '2024-01-15 15:30:00', 'research'), (12, 'James Marrow', '2024-01-15 16:10:00', 'returning book'), (13, 'Tessa Quill', '2024-01-15 17:20:00', 'study'), (14, 'Cora Pell', '2024-01-15 18:01:00', 'study'), (15, 'Hugo Fen', '2024-01-15 19:00:00', 'closing duties');",
+          "objective": "List every visitor who was at the library between 14:00 and 15:00 on 2024-01-15. Show all columns.",
+          "solution": "SELECT * FROM visitors WHERE visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00';",
+          "hints": [
+            "Use a WHERE clause to filter by time.",
+            "SQLite supports BETWEEN for time ranges; the format is 'YYYY-MM-DD HH:MM:SS'.",
+            "Filter for visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00'."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["id", "name", "visit_time", "purpose"],
+            "expected_rows": [
+              {"id": 5, "name": "Sarah Holloway", "visit_time": "2024-01-15 14:12:00", "purpose": "tour"},
+              {"id": 6, "name": "Aldric the Reader", "visit_time": "2024-01-15 14:25:00", "purpose": "reading"},
+              {"id": 7, "name": "Viktor Drane", "visit_time": "2024-01-15 14:33:00", "purpose": "private reading"},
+              {"id": 8, "name": "James Marrow", "visit_time": "2024-01-15 14:48:00", "purpose": "borrowing"},
+              {"id": 9, "name": "Cora Pell", "visit_time": "2024-01-15 14:55:00", "purpose": "tour"}
+            ],
+            "allow_order": true,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c1_2",
+          "type": "investigation",
+          "narrative": "Good. Five people were in the library at the right time. Elowen mentions that the artifact case is in a restricted wing and only members with a private or research purpose are allowed past the velvet rope. Sort the five suspects by name so the head librarian can read them off, and limit the list to the top five.",
+          "schema": "CREATE TABLE visitors (id INTEGER PRIMARY KEY, name TEXT, visit_time TEXT, purpose TEXT);",
+          "sample_data": "INSERT INTO visitors (id, name, visit_time, purpose) VALUES (1, 'Aldric the Reader', '2024-01-15 10:15:00', 'study'), (2, 'Mira Frostweave', '2024-01-15 11:42:00', 'research'), (3, 'Brennan Cole', '2024-01-15 13:05:00', 'return book'), (4, 'Yenna Birch', '2024-01-15 13:50:00', 'meeting'), (5, 'Sarah Holloway', '2024-01-15 14:12:00', 'tour'), (6, 'Aldric the Reader', '2024-01-15 14:25:00', 'reading'), (7, 'Viktor Drane', '2024-01-15 14:33:00', 'private reading'), (8, 'James Marrow', '2024-01-15 14:48:00', 'borrowing'), (9, 'Cora Pell', '2024-01-15 14:55:00', 'tour'), (10, 'Hugo Fen', '2024-01-15 15:02:00', 'meeting'), (11, 'Mira Frostweave', '2024-01-15 15:30:00', 'research'), (12, 'James Marrow', '2024-01-15 16:10:00', 'returning book'), (13, 'Tessa Quill', '2024-01-15 17:20:00', 'study'), (14, 'Cora Pell', '2024-01-15 18:01:00', 'study'), (15, 'Hugo Fen', '2024-01-15 19:00:00', 'closing duties');",
+          "objective": "Return the id and name of visitors in the 14:00-15:00 window, sorted alphabetically by name (A first), limited to 5 rows.",
+          "solution": "SELECT id, name FROM visitors WHERE visit_time BETWEEN '2024-01-15 14:00:00' AND '2024-01-15 15:00:00' ORDER BY name ASC LIMIT 5;",
+          "hints": [
+            "ORDER BY controls the sort; ASC for ascending, DESC for descending.",
+            "LIMIT n caps the number of rows returned.",
+            "Try: ORDER BY name ASC LIMIT 5."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["id", "name"],
+            "expected_rows": [
+              {"id": 6, "name": "Aldric the Reader"},
+              {"id": 9, "name": "Cora Pell"},
+              {"id": 8, "name": "James Marrow"},
+              {"id": 5, "name": "Sarah Holloway"},
+              {"id": 7, "name": "Viktor Drane"}
+            ],
+            "allow_order": false,
+            "allow_extra_rows": false
+          }
+        },
+        {
+          "id": "c1_3",
+          "type": "investigation",
+          "narrative": "Elowen pulls out a second ledger: a table of evidence items found near the scene. Each row is a piece of evidence (a glove, a torn page, a muddy boot) tagged with the suspect it was found near. Group the evidence by suspect name and count how many pieces point at each one, sorted by count descending. The thief is the one with the most evidence.",
+          "schema": "CREATE TABLE evidence (id INTEGER PRIMARY KEY, suspect TEXT, item TEXT, found_at TEXT);",
+          "sample_data": "INSERT INTO evidence (id, suspect, item, found_at) VALUES (1, 'Viktor Drane', 'black glove', 'reading room'), (2, 'Viktor Drane', 'torn page', 'reading room'), (3, 'Viktor Drane', 'glass shard', 'display case'), (4, 'Cora Pell', 'hairpin', 'hallway'), (5, 'Cora Pell', 'tour badge', 'hallway'), (6, 'James Marrow', 'mud on boot', 'front steps'), (7, 'James Marrow', 'late return slip', 'front steps'), (8, 'Aldric the Reader', 'bookmark', 'reading room'), (9, 'Sarah Holloway', 'tour brochure', 'gift shop'), (10, 'Viktor Drane', 'crystal dust', 'display case');",
+          "objective": "For each suspect, count the number of evidence items (alias the count column as 'items'). Show the suspect and the count. Sort the result by count, highest first.",
+          "solution": "SELECT suspect, COUNT(*) AS items FROM evidence GROUP BY suspect ORDER BY items DESC;",
+          "hints": [
+            "GROUP BY collapses rows that share a value in the grouped column.",
+            "COUNT(*) counts rows in each group; pair it with AS to give the column a name.",
+            "Try: GROUP BY suspect ORDER BY COUNT(*) DESC."
+          ],
+          "xp": 100,
+          "time_limit": 120,
+          "validation": {
+            "expected_columns": ["suspect", "items"],
+            "expected_rows": [
+              {"suspect": "Viktor Drane", "items": 4},
+              {"suspect": "Cora Pell", "items": 2},
+              {"suspect": "James Marrow", "items": 2},
+              {"suspect": "Aldric the Reader", "items": 1},
+              {"suspect": "Sarah Holloway", "items": 1}
+            ],
+            "allow_order": false,
+            "allow_extra_rows": false
+          }
+        }
+      ]
+    }
+  ]
+}
