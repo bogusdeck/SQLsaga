@@ -7,8 +7,6 @@
 ╚══════╝ ╚══▀▀═╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ 
 ```
 
-# SQL Saga
-
 An interactive terminal game that teaches SQL through a narrative mystery story.
 
 <img width="1470" height="956" alt="Screenshot 2026-08-19 at 3 14 32 PM" src="https://github.com/user-attachments/assets/3c3973d7-4d9b-4af8-9bfe-651c97f75809" />
